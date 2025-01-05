@@ -48,7 +48,7 @@ function filterRecommendations(query) {
 // Function to display filtered recommendations
 function displayRecommendations(data) {
     // Clear the previous results
-    const container = document.querySelector(".recommendation-container");
+    let container = document.querySelector(".recommendation-container");  // Use 'let' instead of 'const'
     if (container) {
         container.innerHTML = '';  // Clear previous results
     } else {
@@ -79,6 +79,8 @@ function displayRecommendations(data) {
         container.appendChild(categorySection);
     }
 }
+
+
 
 // Function to create a recommendation card
 function createRecommendationCard(item) {
