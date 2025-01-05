@@ -10,15 +10,52 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(data => {
             console.log("Fetched travel recommendations:", data);
-            displayRecommendations(data);
+            // Store the fetched data for later use
+            window.travelData = data;  // Store globally for later reference
         })
         .catch(error => console.error("Error fetching JSON:", error));
+
+    // Add event listener to the search button
+    const searchButton = document.querySelector("button[type='button']");
+    searchButton.addEventListener("click", handleSearch);
 });
 
-// Function to display recommendations
+// Function to handle the search functionality
+function handleSearch() {
+    const query = document.querySelector("input[type='text']").value.toLowerCase();
+    if (!query) return;
+
+    const filteredData = filterRecommendations(query);
+    displayRecommendations(filteredData);
+}
+
+// Function to filter recommendations based on the search query
+function filterRecommendations(query) {
+    const filteredData = { countries: [], temples: [], beaches: [] };
+
+    // Loop through categories and filter items based on the query
+    for (const category in window.travelData) {
+        window.travelData[category].forEach(item => {
+            if (item.name.toLowerCase().includes(query) || (item.cities && item.cities.some(city => city.name.toLowerCase().includes(query)))) {
+                filteredData[category].push(item);
+            }
+        });
+    }
+
+    return filteredData;
+}
+
+// Function to display filtered recommendations
 function displayRecommendations(data) {
-    const container = document.createElement("div");
-    container.className = "recommendation-container";
+    // Clear the previous results
+    const container = document.querySelector(".recommendation-container");
+    if (container) {
+        container.innerHTML = '';  // Clear previous results
+    } else {
+        container = document.createElement("div");
+        container.className = "recommendation-container";
+        document.body.appendChild(container);
+    }
 
     // Process each category: countries, temples, beaches
     for (const category in data) {
@@ -28,7 +65,6 @@ function displayRecommendations(data) {
 
         // Process each item in the category
         data[category].forEach(item => {
-            // Handle nested items for countries (cities)
             if (item.cities) {
                 item.cities.forEach(city => {
                     const cityDiv = createRecommendationCard(city);
@@ -42,8 +78,6 @@ function displayRecommendations(data) {
 
         container.appendChild(categorySection);
     }
-
-    document.body.appendChild(container);
 }
 
 // Function to create a recommendation card
@@ -53,7 +87,6 @@ function createRecommendationCard(item) {
 
     // Use the imageUrl for the image path
     card.innerHTML = `
-        <img src="${item.imageUrl}" alt="${item.name}" class="recommendation-image">
         <h3>${item.name}</h3>
         <p>${item.description}</p>
     `;
