@@ -89,9 +89,10 @@ function createRecommendationCard(item) {
 
     // Use the imageUrl for the image path
     card.innerHTML = `
-        <h3>${item.name}</h3>
-        <p>${item.description}</p>
-    `;
+    <img src="${item.imageUrl}" alt="${item.name}" style="width:100%; height:auto; border-radius:10px; margin-bottom:10px;">
+    <h3>${item.name}</h3>
+    <p>${item.description}</p>`;
+
 
     return card;
 }
@@ -100,4 +101,3 @@ function createRecommendationCard(item) {
 function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
-
