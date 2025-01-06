@@ -57,27 +57,35 @@ function displayRecommendations(data) {
         document.body.appendChild(container);
     }
 
-    // Process each category: countries, temples, beaches
-    for (const category in data) {
-        const categorySection = document.createElement("section");
-        categorySection.className = "recommendation-section";
-        categorySection.innerHTML = `<h2>${capitalize(category)}</h2>`;
-
-        // Process each item in the category
-        data[category].forEach(item => {
-            if (item.cities) {
-                item.cities.forEach(city => {
-                    const cityDiv = createRecommendationCard(city);
-                    categorySection.appendChild(cityDiv);
-                });
-            } else {
-                const itemDiv = createRecommendationCard(item);
-                categorySection.appendChild(itemDiv);
-            }
-        });
-
-        container.appendChild(categorySection);
+ // Process each category: countries, temples, beaches
+for (const category in data) {
+    // Skip categories that are empty or undefined
+    if (!data[category] || data[category].length === 0) {
+        continue;
     }
+
+    const categorySection = document.createElement("section");
+    categorySection.className = "recommendation-section";
+    categorySection.innerHTML = `<h2>${capitalize(category)}</h2>`;
+
+    // Process each item in the category
+    data[category].forEach(item => {
+        if (item.cities) {
+            item.cities.forEach(city => {
+                const cityDiv = createRecommendationCard(city);
+                categorySection.appendChild(cityDiv);
+            });
+        } else {
+            const itemDiv = createRecommendationCard(item);
+            categorySection.appendChild(itemDiv);
+        }
+    });
+
+    // Append the category section to the container
+    container.appendChild(categorySection);
+}
+
+
 }
 
 
