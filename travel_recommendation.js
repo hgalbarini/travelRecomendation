@@ -29,14 +29,27 @@ function handleSearch() {
     displayRecommendations(filteredData);
 }
 
-// Function to filter recommendations based on the search query
 function filterRecommendations(query) {
     const filteredData = { countries: [], temples: [], beaches: [] };
+
+    // Convert query to lowercase for case-insensitive comparison
+    const lowerQuery = query.toLowerCase();
 
     // Loop through categories and filter items based on the query
     for (const category in window.travelData) {
         window.travelData[category].forEach(item => {
-            if (item.name.toLowerCase().includes(query) || (item.cities && item.cities.some(city => city.name.toLowerCase().includes(query)))) {
+            if (category === "countries" && item.cities) {
+                // Filter cities within the country that match the query
+                const matchingCities = item.cities.filter(city => city.name.toLowerCase().includes(lowerQuery));
+                if (matchingCities.length > 0) {
+                    // Add the country with only the matching cities
+                    filteredData[category].push({ ...item, cities: matchingCities });
+                }
+            } else if (
+                item.name.toLowerCase().includes(lowerQuery) || 
+                (item.cities && item.cities.some(city => city.name.toLowerCase().includes(lowerQuery)))
+            ) {
+                // For other categories, add the item if it matches the query
                 filteredData[category].push(item);
             }
         });
@@ -44,6 +57,7 @@ function filterRecommendations(query) {
 
     return filteredData;
 }
+
 
 // Function to display filtered recommendations
 function displayRecommendations(data) {
