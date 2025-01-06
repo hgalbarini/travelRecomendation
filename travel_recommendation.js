@@ -123,3 +123,17 @@ function createRecommendationCard(item) {
 function capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+// Attach an event listener to the reset button
+document.querySelector("button[type='reset']").addEventListener("click", function () {
+    // Find the recommendation container
+    const container = document.querySelector(".recommendation-container");
+
+    // If the container exists, clear its content
+    if (container) {
+        container.innerHTML = "";
+    }
+
+    // Optionally reset the input field (although the reset button does this automatically for inputs in the form)
+    document.querySelector("input[type='text']").value = "";
+});
